@@ -1,0 +1,33 @@
+body {
+    background: #e7eec2 url(../img/bg.png) repeat-x;
+    text-align: center;
+    color: #527057;
+    font-family: arial, sans-serif;
+}
+h1 {
+    text-indent: -5000px;
+    width: 551px;
+    height: 67px;
+    background: url(../img/openhtml5games.png) no-repeat;
+    margin: 50px auto 40px;
+}
+h2 {
+    margin: 10px 0;
+}
+
+#list {
+    width: 1080px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 32px;
+}
+
+.card {
+
+    padding: 8px;
+    background-color: #fff;
+    width: 320px;
+    margin: 12px;
+    float: left;
+}
+ 

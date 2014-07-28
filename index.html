@@ -4,28 +4,104 @@
     <meta charset="utf-8">
     <title>OpenHTML5Games.com - Free mobile HTML5 web games with open source code</title>
     <meta name="description" content="Free mobile HTML5 games with open source code. Learn your way while playing around. No download." />
-    <style>
-    body {
-        background: #e7eec2 url(img/bg.png) repeat-x;
-        text-align: center;
-        color: #527057;
-    }
-    h1 {
-        text-indent: -5000px;
-        width: 551px;
-        height: 67px;
-        background: url(img/openhtml5games.png) no-repeat;
-        margin: 50px auto 40px;
-    }
-    h2 {
-        margin: 10px 0;
-    }
-    </style>
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/screen.css">
+
+    <!-- Scripts -->
+    <script src="js/vendor/jquery-2.0.3.min.js"></script>
+    <script src="js/vendor/prismic.io-1.0.12.min.js"></script>
+    <script src="js/prismic-configuration.js"></script>
+    <script src="js/prismic-helpers.js"></script>
+    <script src="js/prismic-templates.js"></script>
+
 </head>
 <body>
 <h1>OpenHTML5Games.com</h1>
 <h2>Free mobile HTML5 web games with open source code.</h2>
 <h2>Learn your way while playing around. No download.</h2>
+
+        <div id="list">
+            <script type="text/template">
+                <% for(var i=0; i<docs.results.length; i++) { %>
+                    <div class="card">
+                  
+                            <img src="<%= docs.results[i].getImage("game.illustration").views.card.url %>">
+                            <h3><%= docs.results[i].getText("game.title") %></h3>
+                            <a href="<%= docs.results[i].getText("game.playUrl") %>">Play game</a><br />
+                            <a href="<%= docs.results[i].getText("game.sourceUrl") %>">View source</a>
+                            <%= console.log(docs.results[i]) %>
+                        
+                    </div>
+                <% } %>
+            </script>
+
+        </div>
+
+        <div id="pagination">
+            <script type="text/template">
+                <% if(docs.total_pages > 1) { %>
+                    <hr>
+                    <ul>
+                        <% if (docs.page != 1) { %>
+                            <li>
+                                <a href="#<%= docs.page - 1 %>" data-forcereload="true">previous page</a>
+                            </li>
+                        <% } %>
+                        <% for (var i = 1; i <= docs.total_pages; i++) { %>
+                            <li>
+                                <% if (docs.page == i) { %>
+                                    <span><%= i %></span>
+                                <% } else { %>
+                                    <a href="#<%= i %>" data-forcereload="true"><%= i %></a>
+                                <% } %>
+                            </li>
+                        <% } %>
+                        <% if (docs.page != docs.total_pages) { %>
+                            <li>
+                                <a href="#<%= docs.page + 1 %>" data-forcereload="true">next page</a>
+                            </li>
+                        <% } %>
+                    </ul>
+                <% } %>
+            </script>
+        </div>
+
+        
+
+        <!-- Controller (logic) -->
+
+        <script type="text/javascript">
+            $(function() {
+
+                Helpers.withPrismic(function(ctx) {
+
+                    ctx.api.form("everything").set('page', parseInt(window.location.hash.substring(1)) || 1 ).ref(ctx.ref).submit(function(err, docs) {
+
+                        if (err) { Configuration.onPrismicError(err); return; }
+
+                        // Feed the templates
+                        $('header, form, #title, #subtitle, #list, #pagination, footer').render(
+                            {
+                                docs: docs,
+                                ctx: ctx
+                            },
+                            // Useful for pagination: refresh on some links even when only anchor changed
+                            function() {
+                                $('[data-forcereload=true]').click(function(e){
+                                    window.location = $(this).attr('href');
+                                    window.location.reload();
+                                });
+                            }
+                        );
+
+                    });
+
+                });
+
+            });
+        </script>
+<!--
 <script>
   (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
   (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
@@ -34,5 +110,6 @@
   ga('create', 'UA-48896199-1', 'openhtml5games.com');
   ga('send', 'pageview');
 </script>
+-->
 </body>
 </html>
